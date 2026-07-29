@@ -1,6 +1,7 @@
 import Table from "../components/table"
 import StateCard from "../components/stateCard"
 import { recentOrders } from "../data/recentOrder"
+import { topProducts } from "../data/topSelling";
 
 
 const orderColumns = [
@@ -47,18 +48,16 @@ function Dashboard() {
             <div>
                 <Table
                     title="Recent Orders"
-                    columns={[
-                        "Order ID",
-                        "Customer",
-                        "Items",
-                        "Total",
-                        "Payment",
-                        "Status",
-                        "Time",
-                        "Action",
-                    ]}
+                    orderColumns={orderColumns}
                     data={recentOrders}
                 />
+                {/* Top Selling Products table is kept commented to prevent a second table header from rendering. */}
+                <Table
+                    title="Top Selling Products"
+                    orderColumns={productColumns}
+                    data={topProducts}
+                />
+               
             </div>
         </div>
     )
