@@ -7,7 +7,6 @@ export const recentOrders = [
     payment: "Card",
     status: "Completed",
     time: "2m ago",
-    action: "View",
   },
   {
     orderId: "#ORD-1002",
@@ -17,7 +16,6 @@ export const recentOrders = [
     payment: "Cash",
     status: "Preparing",
     time: "5m ago",
-    action: "View",
   },
   {
     orderId: "#ORD-1003",
@@ -27,7 +25,6 @@ export const recentOrders = [
     payment: "Card",
     status: "Completed",
     time: "8m ago",
-    action: "View",
   },
   {
     orderId: "#ORD-1004",
@@ -37,7 +34,6 @@ export const recentOrders = [
     payment: "Online",
     status: "Pending",
     time: "12m ago",
-    action: "View",
   },
   {
     orderId: "#ORD-1005",
@@ -47,6 +43,5 @@ export const recentOrders = [
     payment: "Cash",
     status: "Completed",
     time: "15m ago",
-    action: "View",
   },
 ];

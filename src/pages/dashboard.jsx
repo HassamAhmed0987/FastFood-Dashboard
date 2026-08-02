@@ -45,7 +45,7 @@ function Dashboard() {
                 <StateCard />
                 <StateCard />
             </div>
-            <div>
+            <div className="h-[100vh] overflow-auto">
                 <Table
                     title="Recent Orders"
                     orderColumns={orderColumns}

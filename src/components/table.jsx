@@ -2,7 +2,7 @@
 
 function Table(props) {
 
-    const { title, orderColumns, data } = props
+    const { title, orderColumns, data, view } = props
 
     return (
         <>
@@ -48,7 +48,7 @@ function Table(props) {
                         <thead className="bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-500">
                             <tr>
                                 {orderColumns.map(item => {
-                                    {/* Original key kept for reference: key={item} */}
+                                    {/* Original key kept for reference: key={item} */ }
                                     return <th key={item.accessor} className="px-5 py-4">{item.header}</th>
                                 })}
                                 {/* <th className="px-5 py-4">Order ID</th>
@@ -90,7 +90,13 @@ function Table(props) {
                                             if (col.accessor === "action") {
                                                 return (
                                                     <td key={col.accessor} className="whitespace-nowrap px-5 py-4">
-                                                        {value ? <button type="button" className="font-semibold text-orange-500 transition hover:text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">{value}</button> : <span className="text-slate-400">—</span>}
+                                                        <button
+                                                            type="button"
+                                                            className="rounded-lg bg-orange-500 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-orange-600"
+                                                            onClick={() => view(true)}
+                                                        >
+                                                            View
+                                                        </button>
                                                     </td>
                                                 )
                                             }
@@ -101,7 +107,7 @@ function Table(props) {
                                                 </td>
                                             )
                                         })}
-                                    </tr>   
+                                    </tr>
                                 )
                             })}
                         </tbody>
