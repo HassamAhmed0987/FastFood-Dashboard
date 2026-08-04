@@ -1,0 +1,58 @@
+export const categoryData = [
+  {
+    id: 1,
+    name: "Burgers",
+    description: "Delicious beef and chicken burgers",
+    products: 12,
+    status: "Active",
+  },
+  {
+    id: 2,
+    name: "Pizza",
+    description: "Freshly baked pizzas",
+    products: 9,
+    status: "Active",
+  },
+  {
+    id: 3,
+    name: "Fries",
+    description: "Crispy potato fries",
+    products: 6,
+    status: "Active",
+  },
+  {
+    id: 4,
+    name: "Drinks",
+    description: "Soft drinks and juices",
+    products: 15,
+    status: "Active",
+  },
+  {
+    id: 5,
+    name: "Desserts",
+    description: "Sweet desserts and ice cream",
+    products: 8,
+    status: "Active",
+  },
+  {
+    id: 6,
+    name: "Sandwiches",
+    description: "Grilled and club sandwiches",
+    products: 5,
+    status: "Inactive",
+  },
+  {
+    id: 7,
+    name: "Wraps",
+    description: "Chicken and beef wraps",
+    products: 7,
+    status: "Active",
+  },
+  {
+    id: 8,
+    name: "Salads",
+    description: "Healthy fresh salads",
+    products: 4,
+    status: "Inactive",
+  },
+];

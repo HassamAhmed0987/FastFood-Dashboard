@@ -5,6 +5,7 @@ import Dashboard from './pages/dashboard';
 import Order from './pages/orders';
 import Header from './components/header';
 import Product from './pages/product';
+import Categories from './pages/categories';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/orders" element={<Order />} />
             <Route path="/products" element={<Product />} />
+            <Route path="/categories" element={<Categories/>} />
           </Routes>
 
         </div>
