@@ -1,7 +1,12 @@
 import Table from "../components/table"
 import StateCard from "../components/stateCard"
-import { recentOrders } from "../data/recentOrder"
-import { topProducts } from "../data/topSelling";
+// import { recentOrders } from "../data/recentOrder"
+// import { topProducts } from "../data/topSelling";
+import { useEffect, useState } from "react";
+import { Await } from "react-router-dom";
+import { Banknote, Boxes, ShoppingBag, Timer } from "lucide-react";
+import Modal from "../components/modal";
+import ProductForm from "../forms/productForm";
 
 
 const orderColumns = [
@@ -14,9 +19,6 @@ const orderColumns = [
     { header: "Time", accessor: "time" },
     { header: "Action", accessor: "action" },
 ];
-
-
-
 const productColumns = [
     { header: "Product", accessor: "product" },
     { header: "Category", accessor: "category" },
@@ -37,19 +39,86 @@ const productColumns = [
 
 
 function Dashboard() {
+    const [orders, setOrders] = useState([])
+    const [topProducts, setTopProducts] = useState([])
+    const [products, setProducts] = useState([])
+    const [isOpen, setIsOpen] = useState(false)
+    const [modalType, setModalType] = useState("");
+    const [selectedData, setSelectedData] = useState(null);
+
+    const API_URL = "http://localhost:3000/"
+
+    useEffect(() => {
+        fetchData()
+        fetchProducts()
+    }, [])
+
+
+    async function fetchData() {
+        try {
+            const response = await fetch(`${API_URL}orders`)
+            const resp = await fetch(`${API_URL}topProducts`)
+
+            const topProductData = await resp.json()
+
+            const data = await response.json()
+
+            setTopProducts(topProductData)
+            setOrders(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async function fetchProducts() {
+        try {
+            const response = await fetch(`${API_URL}products`)
+
+            const productData = await response.json()
+
+            setProducts(productData)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+
+
+    const totalProducts = products.length
+    const totalOrders = orders.length
+    const totalRevenue = orders
+        .filter(order => order.status === "Completed")
+        .reduce((acc, order) => (acc = acc + order.total), 0);
+
+    const pendingOrders = orders.filter(order => order.status === "Pending").length
+
+    console.log(totalRevenue);
+
+
+
+    console.log(products.length);
+
     return (
         <div>
+            <Modal
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                title="Add Product"
+            >
+                <ProductForm/>
+            </Modal>
             <div className="px-2 py-3 flex justify-around">
-                <StateCard />
-                <StateCard />
-                <StateCard />
-                <StateCard />
+                <StateCard title={"Total Products"} value={totalProducts} icon={<Boxes />} />
+                <StateCard title={"Total Orders"} value={totalOrders} icon={<ShoppingBag />} />
+                <StateCard title={"$ Revenue"} value={totalRevenue} icon={<Banknote />} />
+                <StateCard title={"Pending Orders"} value={pendingOrders} icon={<Timer />} />
             </div>
             <div className="h-[100vh] overflow-auto">
                 <Table
                     title="Recent Orders"
                     orderColumns={orderColumns}
-                    data={recentOrders}
+                    data={orders}
+                    view={setIsOpen}
                 />
                 {/* Top Selling Products table is kept commented to prevent a second table header from rendering. */}
                 <Table
@@ -57,7 +126,7 @@ function Dashboard() {
                     orderColumns={productColumns}
                     data={topProducts}
                 />
-               
+
             </div>
         </div>
     )

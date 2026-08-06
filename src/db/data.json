@@ -1,0 +1,258 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Burgers",
+      "description": "Delicious beef and chicken burgers",
+      "products": 12,
+      "status": "Active"
+    },
+    {
+      "id": 2,
+      "name": "Pizza",
+      "description": "Freshly baked pizzas",
+      "products": 9,
+      "status": "Active"
+    },
+    {
+      "id": 3,
+      "name": "Fries",
+      "description": "Crispy potato fries",
+      "products": 6,
+      "status": "Active"
+    },
+    {
+      "id": 4,
+      "name": "Drinks",
+      "description": "Soft drinks and juices",
+      "products": 15,
+      "status": "Active"
+    },
+    {
+      "id": 5,
+      "name": "Desserts",
+      "description": "Sweet desserts and ice cream",
+      "products": 8,
+      "status": "Active"
+    },
+    {
+      "id": 6,
+      "name": "Sandwiches",
+      "description": "Grilled and club sandwiches",
+      "products": 5,
+      "status": "Inactive"
+    },
+    {
+      "id": 7,
+      "name": "Wraps",
+      "description": "Chicken and beef wraps",
+      "products": 7,
+      "status": "Active"
+    },
+    {
+      "id": 8,
+      "name": "Salads",
+      "description": "Healthy fresh salads",
+      "products": 4,
+      "status": "Inactive"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Zinger Burger",
+      "category": "Burger",
+      "price": "Rs. 650",
+      "stock": 45
+    },
+    {
+      "id": 2,
+      "name": "Cheese Burger",
+      "category": "Burger",
+      "price": "Rs. 750",
+      "stock": 30
+    },
+    {
+      "id": 3,
+      "name": "Chicken Pizza",
+      "category": "Pizza",
+      "price": "Rs. 1800",
+      "stock": 18
+    },
+    {
+      "id": 4,
+      "name": "Pepperoni Pizza",
+      "category": "Pizza",
+      "price": "Rs. 2200",
+      "stock": 12
+    },
+    {
+      "id": 5,
+      "name": "French Fries",
+      "category": "Sides",
+      "price": "Rs. 350",
+      "stock": 70
+    },
+    {
+      "id": 6,
+      "name": "Chicken Nuggets",
+      "category": "Sides",
+      "price": "Rs. 550",
+      "stock": 40
+    },
+    {
+      "id": 7,
+      "name": "Coca Cola",
+      "category": "Drinks",
+      "price": "Rs. 180",
+      "stock": 120
+    },
+    {
+      "id": 8,
+      "name": "Pepsi",
+      "category": "Drinks",
+      "price": "Rs. 180",
+      "stock": 100
+    },
+    {
+      "id": 9,
+      "name": "Chocolate Shake",
+      "category": "Beverages",
+      "price": "Rs. 450",
+      "stock": 25
+    },
+    {
+      "id": 10,
+      "name": "Ice Cream",
+      "category": "Desserts",
+      "price": "Rs. 300",
+      "stock": 35
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "orderId": "#ORD-1001",
+      "customer": "Ali Khan",
+      "items": "2x Zinger Burger, 1x Fries",
+      "total": 2350,
+      "payment": "Card",
+      "status": "Completed",
+      "time": "2m ago"
+    },
+    {
+      "id": 2,
+      "orderId": "#ORD-1002",
+      "customer": "Ahmed Raza",
+      "items": "1x Large Pizza",
+      "total": 3150,
+      "payment": "Cash",
+      "status": "Preparing",
+      "time": "5m ago"
+    },
+    {
+      "id": 3,
+      "orderId": "#ORD-1003",
+      "customer": "Sara Ahmed",
+      "items": "2x Chicken Wrap",
+      "total": 1850,
+      "payment": "Card",
+      "status": "Completed",
+      "time": "8m ago"
+    },
+    {
+      "id": 4,
+      "orderId": "#ORD-1004",
+      "customer": "Hassan Ali",
+      "items": "1x Beef Burger, 2x Coke",
+      "total": 2100,
+      "payment": "Online",
+      "status": "Pending",
+      "time": "12m ago"
+    },
+    {
+      "id": 5,
+      "orderId": "#ORD-1005",
+      "customer": "Fatima Noor",
+      "items": "3x Crispy Chicken",
+      "total": 4250,
+      "payment": "Cash",
+      "status": "Completed",
+      "time": "15m ago"
+    }
+  ],
+  "topProducts": [
+    {
+      "id": 1,
+      "product": "Zinger Burger",
+      "category": "Burger",
+      "sold": 342,
+      "revenue": "$5,130",
+      "stock": 48,
+      "status": "In Stock"
+    },
+    {
+      "id": 2,
+      "product": "Cheese Pizza",
+      "category": "Pizza",
+      "sold": 295,
+      "revenue": "$6,490",
+      "stock": 22,
+      "status": "Low Stock"
+    },
+    {
+      "id": 3,
+      "product": "Chicken Shawarma",
+      "category": "Wrap",
+      "sold": 261,
+      "revenue": "$3,915",
+      "stock": 0,
+      "status": "Out of Stock"
+    },
+    {
+      "id": 4,
+      "product": "French Fries",
+      "category": "Sides",
+      "sold": 410,
+      "revenue": "$2,870",
+      "stock": 65,
+      "status": "In Stock"
+    },
+    {
+      "id": 5,
+      "product": "Cold Coffee",
+      "category": "Beverage",
+      "sold": 198,
+      "revenue": "$1,980",
+      "stock": 30,
+      "status": "In Stock"
+    },
+    {
+      "id": 6,
+      "product": "Chicken Nuggets",
+      "category": "Snacks",
+      "sold": 176,
+      "revenue": "$2,640",
+      "stock": 14,
+      "status": "Low Stock"
+    },
+    {
+      "id": 7,
+      "product": "BBQ Pizza",
+      "category": "Pizza",
+      "sold": 154,
+      "revenue": "$3,850",
+      "stock": 18,
+      "status": "Low Stock"
+    },
+    {
+      "id": 8,
+      "product": "Mint Lemonade",
+      "category": "Beverage",
+      "sold": 132,
+      "revenue": "$1,320",
+      "stock": 40,
+      "status": "In Stock"
+    }
+  ]
+}
