@@ -7,6 +7,7 @@ import { Await } from "react-router-dom";
 import { Banknote, Boxes, ShoppingBag, Timer } from "lucide-react";
 import Modal from "../components/modal";
 import ProductForm from "../forms/productForm";
+import OrderDetail from "../components/orderDetail";
 
 
 const orderColumns = [
@@ -20,23 +21,11 @@ const orderColumns = [
     { header: "Action", accessor: "action" },
 ];
 const productColumns = [
-    { header: "Product", accessor: "product" },
-    { header: "Category", accessor: "category" },
+    { header: "Product", accessor: "name" },
     { header: "Sold", accessor: "sold" },
     { header: "Revenue", accessor: "revenue" },
-    { header: "Stock", accessor: "stock" },
-    { header: "Status", accessor: "status" },
     { header: "Action", accessor: "action" },
 ];
-
-
-
-
-
-
-
-
-
 
 function Dashboard() {
     const [orders, setOrders] = useState([])
@@ -52,7 +41,6 @@ function Dashboard() {
         fetchData()
         fetchProducts()
     }, [])
-
 
     async function fetchData() {
         try {
@@ -92,20 +80,40 @@ function Dashboard() {
 
     const pendingOrders = orders.filter(order => order.status === "Pending").length
 
-    console.log(totalRevenue);
+    const handleOrderView = (order) => {
+        setSelectedData(order);
+        setModalType("order-detail");
+        setIsOpen(true);
+    };
 
+    const handleProductView = (product) => {
+        setSelectedData(product);
+        setModalType("product-detail");
+        setIsOpen(true);
+    };
 
+    // console.log(totalRevenue);
 
-    console.log(products.length);
+    // console.log(products.length);    
 
     return (
         <div>
             <Modal
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-                title="Add Product"
+                title={
+                    modalType === "order-detail"
+                        ? "Order Details"
+                        : "Product Details"
+                }
             >
-                <ProductForm/>
+                {modalType === "order-detail" && (
+                    <OrderDetail order={selectedData} />
+                )}
+
+                {modalType === "product-detail" && (
+                    <ProductDetail product={selectedData} />
+                )}
             </Modal>
             <div className="px-2 py-3 flex justify-around">
                 <StateCard title={"Total Products"} value={totalProducts} icon={<Boxes />} />
@@ -118,14 +126,15 @@ function Dashboard() {
                     title="Recent Orders"
                     orderColumns={orderColumns}
                     data={orders}
-                    view={setIsOpen}
+                    view={handleOrderView}
                 />
                 {/* Top Selling Products table is kept commented to prevent a second table header from rendering. */}
-                <Table
+                {/* <Table
                     title="Top Selling Products"
                     orderColumns={productColumns}
-                    data={topProducts}
-                />
+                    data={topSellingProducts}
+                    view={handleProductView}
+                /> */}
 
             </div>
         </div>

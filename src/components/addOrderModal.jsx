@@ -1,112 +1,439 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+function AddOrder() {
+    const [customer, setCustomer] = useState("");
+    const [phone, setPhone] = useState("");
 
-function AddOrderModal({ isOpen, onClose, onSubmit }) {
-    const [formData, setFormData] = useState({
-        customer: "",
-        items: "",
-        total: "",
-        payment: "Cash",
-        status: "Pending",
-    });
+    const [selectedProduct, setSelectedProduct] = useState("");
+    const [quantity, setQuantity] = useState(1);
+
+    const [items, setItems] = useState([]);
+
+    const [delivery, setDelivery] = useState(150);
+    const [discount, setDiscount] = useState(0);
+    const [payment, setPayment] = useState("Cash");
+    const [status, setStatus] = useState("Pending");
+    const [notes, setNotes] = useState("");
+    const [products, setProducts] = useState([])
+
+
+    const API_URL = "http://localhost:3000/"
 
     useEffect(() => {
-        if (!isOpen) return undefined;
+        fetchData()
+    }, [])
 
-        const handleEscape = (event) => {
-            if (event.key === "Escape") onClose();
-        };
+    async function fetchData() {
+        const response = await fetch(`${API_URL}products`)
+        const data = await response.json()
+        setProducts(data)
+    }
 
-        document.addEventListener("keydown", handleEscape);
-        return () => document.removeEventListener("keydown", handleEscape);
-    }, [isOpen, onClose]);
 
-    if (!isOpen) return null;
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormData((currentData) => ({ ...currentData, [name]: value }));
+
+
+    // Add product to items
+    const handleAddItem = () => {
+        if (!selectedProduct) return;
+
+        const product = products.find(
+            (product) => String(product.id) === String(selectedProduct)
+        );
+
+        if (!product) return;
+
+        const existingItem = items.find(
+            (item) => String(item.productId) === String(product.id)
+        );
+
+        if (existingItem) {
+            setItems(
+                items.map((item) =>
+                    String(item.productId) === String(product.id)
+                        ? {
+                            ...item,
+                            quantity: item.quantity + Number(quantity),
+                        }
+                        : item
+                )
+            );
+        } else {
+            setItems([
+                ...items,
+                {
+                    productId: product.id,
+                    name: product.name,
+                    quantity: Number(quantity),
+                    price: Number(product.price),
+                },
+            ]);
+        }
+
+        setSelectedProduct("");
+        setQuantity(1);
+    };
+    //   const handleAddItem = () => {
+    //     if (!selectedProduct) return;
+
+    //     const product = products.find(
+    //       (product) => product.id === Number(selectedProduct)
+    //     );
+
+    //     if (!product) return;
+
+    //     const existingItem = items.find(
+    //       (item) => item.productId === product.id
+    //     );
+
+    //     if (existingItem) {
+    //       setItems(
+    //         items.map((item) =>
+    //           item.productId === product.id
+    //             ? {
+    //                 ...item,
+    //                 quantity: item.quantity + Number(quantity),
+    //               }
+    //             : item
+    //         )
+    //       );
+    //     } else {
+    //       setItems([
+    //         ...items,
+    //         {
+    //           productId: product.id,
+    //           name: product.name,
+    //           quantity: Number(quantity),
+    //           price: product.price,
+    //         },
+    //       ]);
+    //     }
+
+    //     setSelectedProduct("");
+    //     setQuantity(1);
+    //   };
+
+    // Remove item
+    const handleRemoveItem = (productId) => {
+        setItems(
+            items.filter((item) => item.productId !== productId)
+        );
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        onSubmit(formData);
-        setFormData({ customer: "", items: "", total: "", payment: "Cash", status: "Pending" });
-        onClose();
+    // Subtotal
+    const subtotal = items.reduce(
+        (total, item) => total + item.quantity * item.price,
+        0
+    );
+
+    // Final total
+    const total = subtotal + Number(delivery) - Number(discount);
+
+    // Save Order
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const order = {
+            id: Date.now(),
+            orderId: `#ORD-${Date.now()}`,
+            customer,
+            phone,
+            items,
+            delivery: Number(delivery),
+            discount: Number(discount),
+            total,
+            payment,
+            status,
+            time: "Just now",
+            notes,
+        };
+
+        console.log(order);
+
+        // Yahan API / JSON Server mein POST kar sakte ho
     };
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"
-            role="presentation"
-            onMouseDown={(event) => {
-                if (event.target === event.currentTarget) onClose();
-            }}
-        >
-            <div
-                className="w-full max-w-lg rounded-2xl bg-white shadow-2xl"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="add-order-title"
-            >
-                <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
+
+            {/* Customer Information */}
+            <div>
+                <h3 className="mb-4 text-lg font-semibold text-slate-800">
+                    Customer Information
+                </h3>
+
+                <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <h2 id="add-order-title" className="text-xl font-bold text-slate-800">Add New Order</h2>
-                        <p className="mt-1 text-sm text-slate-500">Enter the customer order details.</p>
+                        <label className="mb-1 block text-sm font-medium">
+                            Customer Name
+                        </label>
+
+                        <input
+                            type="text"
+                            value={customer}
+                            onChange={(e) => setCustomer(e.target.value)}
+                            placeholder="Enter customer name"
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+                            required
+                        />
                     </div>
+
+                    <div>
+                        <label className="mb-1 block text-sm font-medium">
+                            Phone
+                        </label>
+
+                        <input
+                            type="text"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="03XXXXXXXXX"
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Add Product */}
+            <div>
+                <h3 className="mb-4 text-lg font-semibold text-slate-800">
+                    Add Products
+                </h3>
+
+                <div className="flex items-end gap-3">
+
+                    {/* Product Dropdown */}
+                    <div className="flex-1">
+                        <label className="mb-1 block text-sm font-medium">
+                            Product
+                        </label>
+
+                        <select
+                            value={selectedProduct}
+                            onChange={(e) => setSelectedProduct(e.target.value)}
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+                        >
+                            <option value="">Select Product</option>
+
+                            {products.map((product) => (
+                                <option key={product.id} value={product.id}>
+                                    {product.name} - Rs. {product.price}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Quantity */}
+                    <div className="w-28">
+                        <label className="mb-1 block text-sm font-medium">
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            min="1"
+                            value={quantity}
+                            onChange={(e) => setQuantity(e.target.value)}
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+                        />
+                    </div>
+
+                    {/* Add Button */}
                     <button
                         type="button"
-                        onClick={onClose}
-                        aria-label="Close add order modal"
-                        className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-2 focus-visible:outline-orange-500"
+                        onClick={handleAddItem}
+                        className="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700"
                     >
-                        <X size={20} />
+                        Add Item
                     </button>
                 </div>
-
-                <form onSubmit={handleSubmit} className="space-y-4 px-6 py-5">
-                    <label className="block text-sm font-semibold text-slate-700">
-                        Customer name
-                        <input name="customer" value={formData.customer} onChange={handleChange} required placeholder="e.g. Ali Khan" className="mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2.5 font-normal outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100" />
-                    </label>
-
-                    <label className="block text-sm font-semibold text-slate-700">
-                        Order items
-                        <input name="items" value={formData.items} onChange={handleChange} required placeholder="e.g. 2x Zinger Burger, 1x Fries" className="mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2.5 font-normal outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100" />
-                    </label>
-
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <label className="block text-sm font-semibold text-slate-700">
-                            Total (Rs.)
-                            <input name="total" value={formData.total} onChange={handleChange} required type="number" min="0" placeholder="0" className="mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2.5 font-normal outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100" />
-                        </label>
-                        <label className="block text-sm font-semibold text-slate-700">
-                            Payment method
-                            <select name="payment" value={formData.payment} onChange={handleChange} className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 font-normal outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                                <option>Cash</option>
-                                <option>Card</option>
-                                <option>Online</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <label className="block text-sm font-semibold text-slate-700">
-                        Status
-                        <select name="status" value={formData.status} onChange={handleChange} className="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 font-normal outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                            <option>Pending</option>
-                            <option>Preparing</option>
-                            <option>Completed</option>
-                        </select>
-                    </label>
-
-                    <div className="flex justify-end gap-3 border-t border-slate-100 pt-5">
-                        <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">Cancel</button>
-                        <button type="submit" className="rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">Create Order</button>
-                    </div>
-                </form>
             </div>
-        </div>
+
+            {/* Items Table */}
+            {items.length > 0 && (
+                <div className="overflow-hidden rounded-xl border border-slate-200">
+                    <table className="w-full text-left">
+
+                        <thead className="bg-slate-50">
+                            <tr>
+                                <th className="px-4 py-3 text-sm font-semibold">
+                                    Product
+                                </th>
+
+                                <th className="px-4 py-3 text-sm font-semibold">
+                                    Price
+                                </th>
+
+                                <th className="px-4 py-3 text-sm font-semibold">
+                                    Quantity
+                                </th>
+
+                                <th className="px-4 py-3 text-sm font-semibold">
+                                    Total
+                                </th>
+
+                                <th className="px-4 py-3 text-sm font-semibold">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {items.map((item) => (
+                                <tr
+                                    key={item.productId}
+                                    className="border-t border-slate-200"
+                                >
+                                    <td className="px-4 py-3">
+                                        {item.name}
+                                    </td>
+
+                                    <td className="px-4 py-3">
+                                        Rs. {item.price}
+                                    </td>
+
+                                    <td className="px-4 py-3">
+                                        {item.quantity}
+                                    </td>
+
+                                    <td className="px-4 py-3 font-medium">
+                                        Rs. {item.quantity * item.price}
+                                    </td>
+
+                                    <td className="px-4 py-3">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleRemoveItem(item.productId)
+                                            }
+                                            className="text-sm font-medium text-red-500 hover:text-red-700"
+                                        >
+                                            Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+
+                    </table>
+                </div>
+            )}
+
+            {/* Order Summary */}
+            <div className="grid grid-cols-3 gap-4">
+
+                <div>
+                    <label className="mb-1 block text-sm font-medium">
+                        Delivery
+                    </label>
+
+                    <input
+                        type="number"
+                        value={delivery}
+                        onChange={(e) => setDelivery(e.target.value)}
+                        className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                    />
+                </div>
+
+                <div>
+                    <label className="mb-1 block text-sm font-medium">
+                        Discount
+                    </label>
+
+                    <input
+                        type="number"
+                        value={discount}
+                        onChange={(e) => setDiscount(e.target.value)}
+                        className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                    />
+                </div>
+
+                <div>
+                    <label className="mb-1 block text-sm font-medium">
+                        Payment
+                    </label>
+
+                    <select
+                        value={payment}
+                        onChange={(e) => setPayment(e.target.value)}
+                        className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                    >
+                        <option>Cash</option>
+                        <option>Card</option>
+                        <option>Online</option>
+                    </select>
+                </div>
+
+            </div>
+
+            {/* Status */}
+            <div>
+                <label className="mb-1 block text-sm font-medium">
+                    Status
+                </label>
+
+                <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                >
+                    <option>Pending</option>
+                    <option>Preparing</option>
+                    <option>Out for Delivery</option>
+                    <option>Completed</option>
+                    <option>Cancelled</option>
+                </select>
+            </div>
+
+            {/* Notes */}
+            <div>
+                <label className="mb-1 block text-sm font-medium">
+                    Notes
+                </label>
+
+                <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="Any special instructions..."
+                    rows="3"
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500"
+                />
+            </div>
+
+            {/* Total */}
+            <div className="rounded-xl bg-slate-50 p-4">
+                <div className="flex justify-between text-sm">
+                    <span>Subtotal</span>
+                    <span>Rs. {subtotal}</span>
+                </div>
+
+                <div className="mt-2 flex justify-between text-sm">
+                    <span>Delivery</span>
+                    <span>Rs. {delivery}</span>
+                </div>
+
+                <div className="mt-2 flex justify-between text-sm">
+                    <span>Discount</span>
+                    <span>- Rs. {discount}</span>
+                </div>
+
+                <div className="mt-3 flex justify-between border-t pt-3 text-lg font-bold">
+                    <span>Total</span>
+                    <span>Rs. {total}</span>
+                </div>
+            </div>
+
+            {/* Submit */}
+            <button
+                type="submit"
+                disabled={items.length === 0}
+                className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+                Create Order
+            </button>
+
+        </form>
     );
 }
 
-export default AddOrderModal;
+export default AddOrder;
